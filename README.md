@@ -1,119 +1,101 @@
-# Portfolio Quantum Optimization
+# Portfolio Quantum Optimization 🔬
 
-Este projeto implementa um algoritmo QAOA (Quantum Approximate Optimization Algorithm) para otimização de portfólio, executado no hardware quântico da IBM.
+> Quantum portfolio selection using QAOA on real IBM Quantum hardware.
 
-## 📋 Descrição
+## Overview
 
-O problema consiste em selecionar um subconjunto de ativos (por exemplo, 3 de 6) para minimizar o risco (covariância) e maximizar o retorno. O algoritmo QAOA é usado para resolver este problema de otimização combinatória.
+This project implements a **QAOA (Quantum Approximate Optimization Algorithm)** to solve a combinatorial portfolio optimization problem executed on **real IBM Quantum hardware** — not a simulator.
 
-Foram desenvolvidas duas versões principais:
-- `mainX13IBM.py`: Versão simplificada e rápida.
-- `mainX14IBM.py`: Versão com análise avançada, comparação com solução clássica e ordenação por qualidade.
+The goal: select the optimal subset of assets (e.g. 3 out of 6) that **minimizes covariance risk** while **maximizing expected return** — a classic NP-hard combinatorial problem that quantum computing is uniquely positioned to address.
 
-## 🚀 Instalação
+## Why Quantum?
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/Portfolio-Quantum-Optimization.git
-   cd Portfolio-Quantum-Optimization
+Classical portfolio optimizers struggle with combinatorial asset selection at scale. QAOA maps the optimization problem to a quantum circuit, exploring the solution space in superposition and leveraging quantum interference to amplify the probability of optimal solutions.
 
+## Versions
 
-crie um ambiente virtual (opcional, mas recomendado):
+| File | Description |
+|------|-------------|
+| `mainX13IBM.py` | Fast baseline version — quick circuit execution |
+| `mainX14IBM.py` | Advanced version with classical benchmarking, quality ranking, and performance analysis |
 
-bash
+## Results
+
+```
+Optimal Configuration Found
+Penalty Factor:     35.0
+QAOA Parameters:    [0.7, 0.3, 0.5, 0.5]
+Valid Solutions:    ~26% of shots
+Optimal Probability: 1.27%
+Performance Rating: ✅ GOOD
+```
+
+Classical optimal solution was found and validated by the quantum run.
+
+## Installation
+
+```bash
+git clone https://github.com/Novalt/Portfolio-Quantum-Optimization.git
+cd Portfolio-Quantum-Optimization
 python -m venv venv
-source venv/bin/activate  # No Windows: venv\Scripts\activate
-
-Instale as dependências:
-
-bash
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+```
 
+## IBM Quantum Setup
 
-🔧 Configuração do IBM Quantum
-Crie uma conta no IBM Quantum.
-
-Obtenha seu token de API.
-
-Execute o script de configuração:
-
-bash
+```bash
 python env-IBM-Cloud-pyAuthentication.py
-Ou configure manualmente:
+```
 
-python
+Or manually:
+```python
 from qiskit_ibm_runtime import QiskitRuntimeService
-QiskitRuntimeService.save_account(channel="ibm_quantum", token="SEU_TOKEN")
+QiskitRuntimeService.save_account(channel="ibm_quantum", token="YOUR_TOKEN")
+```
 
-▶️ Execução
-Versão 14 (Recomendada)
-bash
+## Usage
+
+```bash
+# Recommended — full analysis with benchmarking
 python src/mainX14IBM.py
-Versão 13 (Mais rápida)
-bash
+
+# Fast version
 python src/mainX13IBM.py
-📊 Resultados
-Os resultados serão exibidos no terminal, incluindo:
+```
 
-Distribuição por número de ativos selecionados
+## Configuration
 
-Top 5 soluções válidas
+```python
+CONFIG = {
+    "NUM_ATIVOS": 6,           # Total assets
+    "NUM_SELECIONAR": 3,       # Assets to select
+    "PENALIDADE_FACTOR": 35.0, # Constraint penalty
+    "PARAMETROS_FIXOS": [0.7, 0.3, 0.5, 0.5],  # QAOA angles
+    "NUM_SHOTS": 2048          # Quantum circuit executions
+}
+```
 
-Comparação com a solução clássica ótima (na versão 14)
+## Tech Stack
 
-Métricas de desempenho
+- **Python** — Core implementation
+- **Qiskit** — Quantum circuit construction
+- **IBM Quantum Runtime** — Real quantum hardware execution
+- **NumPy** — Matrix operations and covariance computation
 
-Configuração Ótima Encontrada
-Penalidade: 35.0
+## Structure
 
-Parâmetros QAOA: [0.7, 0.3, 0.5, 0.5]
+```
+Portfolio-Quantum-Optimization/
+├── src/
+│   ├── mainX13IBM.py          # Baseline version
+│   ├── mainX14IBM.py          # Advanced version
+│   └── utils.py               # Helper functions
+├── env-IBM-Cloud-pyAuthentication.py
+├── requirements.txt
+└── README.md
+```
 
-Eficiência: ~26% de soluções válidas
+---
 
-Probabilidade da solução ótima: ~1.2%
-
-🗂️ Estrutura de Arquivos
-src/mainX13IBM.py: Código da versão 13.
-
-src/mainX14IBM.py: Código da versão 14.
-
-src/utils.py: Funções auxiliares (se houver).
-
-requirements.txt: Dependências do projeto.
-
-setup_ibm_quantum.py: Script para configurar o IBM Quantum.
-
-README.md: Este arquivo.
-
-⚙️ Personalização
-Edite o dicionário CONFIG no início do arquivo mainX14IBM.py para ajustar:
-
-Número de ativos (NUM_ATIVOS)
-
-Número de ativos a selecionar (NUM_SELECIONAR)
-
-Fator de penalidade (PENALIDADE_FACTOR)
-
-Parâmetros do QAOA (PARAMETROS_FIXOS)
-
-Número de shots (NUM_SHOTS)
-
-📈 Exemplo de Saída
-text
-🚀 PROBLEMA DE PORTFÓLIO - 6 ATIVOS NO HARDWARE IBM (VERSÃO OTIMIZADA)
-======================================================================
-✅ CONFIGURAÇÃO OTIMIZADA COM BASE NOS TESTES ANTERIORES
-   • Penalidade: 35.0
-   • Parâmetros QAOA: [0.7, 0.3, 0.5, 0.5]
-📊 PORTFÓLIO: 6 ativos, selecionar 3
-
-... (outras saídas)
-
-📊 MÉTRICAS FINAIS:
-• Soluções válidas (3 ativos): 25.4%
-• Shots válidos: 520/2048
-• Solução clássica ótima encontrada pelo QAOA: ✅ SIM
-• Probabilidade da solução ótima: 1.27%
-• Desempenho: ✅ BOM
-🤝 Contribuições
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+*Executed on IBM Quantum hardware — not a simulation.*
